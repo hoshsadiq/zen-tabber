@@ -1,0 +1,15 @@
+{
+    "id": "c2792866-a7f0-4598-9320-796057cd9202",
+    "name": "Zen Tabber",
+    "description": "Unified tab styling: halo borders, tints, strips, and unloaded dimming",
+    "version": "1.0.0",
+    "author": "zen-tabber",
+    "homepage": "https://github.com/hoshsadiq/zen-tabber",
+    "style": "https://raw.githubusercontent.com/hoshsadiq/zen-tabber/main/chrome.css",
+    "readme": "https://raw.githubusercontent.com/hoshsadiq/zen-tabber/main/readme.md",
+    "image": "https://raw.githubusercontent.com/hoshsadiq/zen-tabber/main/image.png",
+    "preferences": "https://raw.githubusercontent.com/hoshsadiq/zen-tabber/main/preferences.json",
+    "tags": ["tabs", "containers", "theming"],
+    "createdAt": "2026-05-18T00:00:00.000Z",
+    "updatedAt": "2026-05-18T00:00:00.000Z"
+}
