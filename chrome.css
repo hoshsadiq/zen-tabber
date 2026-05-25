@@ -1,0 +1,135 @@
+/*
+ * Zen Tabber - Unified Tab Styling Mod
+ *
+ * Assumptions:
+ * - [pending="true"] identifies unloaded tabs
+ * - [usercontextid] identifies container tabs (absent on non-container tabs)
+ * - [zen-essential] identifies pinned/essential tabs
+ * - :has(.tab-context-line) matches even when display:none (CSS spec: DOM presence, not visibility)
+ *
+ * Conflict resolution:
+ * - Strip (Section 5) overrides halo's border-left via cascade order (Section 5 comes after Section 3)
+ * - Both use !important, so later declaration wins when both toggles are active
+ * - grayscale filter on parent .tabbrowser-tab propagates to all children (unloaded wins over container colors)
+ */
+
+/* ==========================================================================
+   Section 2: Intensity Presets
+   Medium values as :root defaults (always active)
+   ========================================================================== */
+
+:root {
+  --zt-halo-selected: 90%;
+  --zt-halo-unselected: 45%;
+  --zt-tint-selected: 10%;
+  --zt-tint-unselected: 5%;
+  --zt-neutral-selected: 8%;
+  --zt-strip-pct: 20%;
+  --zt-opacity-selected: 1;
+  --zt-opacity-unselected: 0.8;
+}
+
+@media (-moz-pref("mod.zen-tabber.intensity", "low")) {
+  :root {
+    --zt-halo-selected: 60%;
+    --zt-halo-unselected: 25%;
+    --zt-tint-selected: 5%;
+    --zt-tint-unselected: 3%;
+    --zt-neutral-selected: 4%;
+    --zt-strip-pct: 10%;
+    --zt-opacity-selected: 0.9;
+    --zt-opacity-unselected: 0.7;
+  }
+}
+
+@media (-moz-pref("mod.zen-tabber.intensity", "high")) {
+  :root {
+    --zt-halo-selected: 100%;
+    --zt-halo-unselected: 65%;
+    --zt-tint-selected: 20%;
+    --zt-tint-unselected: 10%;
+    --zt-neutral-selected: 12%;
+    --zt-strip-pct: 35%;
+    --zt-opacity-selected: 1;
+    --zt-opacity-unselected: 0.9;
+  }
+}
+
+/* ==========================================================================
+   Section 3: Unloaded Tab Dimming
+   ========================================================================== */
+
+@media (-moz-bool-pref: "mod.zen-tabber.unloaded-dimming") {
+  .tabbrowser-tab[pending="true"] {
+    filter: grayscale(1) !important;
+    opacity: 0.5 !important;
+  }
+}
+
+/* ==========================================================================
+   Section 4: Container Halo Border
+   ========================================================================== */
+
+@media (-moz-bool-pref: "mod.zen-tabber.container-halo") {
+  /* Selected container tabs: bright halo */
+  .tabbrowser-tab[usercontextid]:is([selected], [visuallyselected], [multiselected]):has(.tab-context-line)
+    .tab-background {
+    border: 2.5px solid color-mix(in srgb, var(--identity-tab-color, var(--tab-group-color-gray-invert)) var(--zt-halo-selected, 90%), transparent) !important;
+    border-left: 2px solid color-mix(in srgb, var(--identity-tab-color, var(--tab-group-color-gray-invert)) var(--zt-halo-selected, 90%), transparent) !important;
+    opacity: var(--zt-opacity-selected, 1) !important;
+  }
+
+  /* Unselected container tabs: dim halo */
+  .tabbrowser-tab[usercontextid]:not([selected]):not([visuallyselected]):not([multiselected]):has(.tab-context-line)
+    .tab-background {
+    border: 2.5px solid color-mix(in srgb, var(--identity-tab-color, var(--tab-group-color-gray-invert)) var(--zt-halo-unselected, 45%), transparent) !important;
+    border-left: 2px solid color-mix(in srgb, var(--identity-tab-color, var(--tab-group-color-gray-invert)) var(--zt-halo-unselected, 45%), transparent) !important;
+    opacity: var(--zt-opacity-unselected, 0.8) !important;
+  }
+
+  /* Hide default context line when halo is active */
+  .tabbrowser-tab .tab-context-line {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    margin-inline-start: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+/* ==========================================================================
+   Section 5: Background Tint
+   ========================================================================== */
+
+@media (-moz-bool-pref: "mod.zen-tabber.background-tint") {
+  /* Selected container tabs: colored tint */
+  .tabbrowser-tab[usercontextid]:is([selected], [visuallyselected], [multiselected]):has(.tab-context-line)
+    .tab-background {
+    background-color: color-mix(in srgb, var(--identity-tab-color, var(--tab-group-color-gray-invert)) var(--zt-tint-selected, 10%), transparent) !important;
+  }
+
+  /* Unselected container tabs: subtle colored tint */
+  .tabbrowser-tab[usercontextid]:not([selected]):not([visuallyselected]):not([multiselected]):has(.tab-context-line)
+    .tab-background {
+    background-color: color-mix(in srgb, var(--identity-tab-color, var(--tab-group-color-gray-invert)) var(--zt-tint-unselected, 5%), transparent) !important;
+  }
+
+  /* Non-container selected tabs: gray neutral tint */
+  .tabbrowser-tab:not([usercontextid]):is([selected], [visuallyselected], [multiselected])
+    .tab-background {
+    background-color: color-mix(in srgb, var(--tab-group-color-gray-invert, gray) var(--zt-neutral-selected, 8%), transparent) !important;
+  }
+}
+
+/* ==========================================================================
+   Section 6: Thick Left Color Strip
+   ========================================================================== */
+
+@media (-moz-bool-pref: "mod.zen-tabber.colored-strip") {
+  /* Selected container tabs: thick left border strip (overrides halo's border-left via cascade order) */
+  .tabbrowser-tab[usercontextid]:is([selected], [visuallyselected], [multiselected]):has(.tab-context-line)
+    .tab-background {
+    border-left: 32px solid color-mix(in srgb, var(--identity-tab-color, var(--tab-group-color-gray-invert)) var(--zt-strip-pct, 20%), transparent) !important;
+  }
+}

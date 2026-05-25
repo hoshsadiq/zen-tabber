@@ -1,0 +1,37 @@
+[
+  {
+    "property": "mod.zen-tabber.unloaded-dimming",
+    "label": "Dim unloaded tabs",
+    "type": "checkbox",
+    "defaultValue": true
+  },
+  {
+    "property": "mod.zen-tabber.container-halo",
+    "label": "Container halo border",
+    "type": "checkbox",
+    "defaultValue": true
+  },
+  {
+    "property": "mod.zen-tabber.background-tint",
+    "label": "Container background tint",
+    "type": "checkbox",
+    "defaultValue": true
+  },
+  {
+    "property": "mod.zen-tabber.colored-strip",
+    "label": "Thick left color strip",
+    "type": "checkbox",
+    "defaultValue": false
+  },
+  {
+    "property": "mod.zen-tabber.intensity",
+    "label": "Color intensity",
+    "type": "dropdown",
+    "defaultValue": "medium",
+    "options": [
+      {"label": "Low", "value": "low"},
+      {"label": "Medium", "value": "medium"},
+      {"label": "High", "value": "high"}
+    ]
+  }
+]
